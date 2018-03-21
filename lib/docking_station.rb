@@ -17,11 +17,11 @@ class DockingStation
     if empty?
       raise "No bikes!"
     else
-      released_bike = Bike.new
+      @bikes_storage.pop
     end
   end
 
-  def return_bike(bike)
+  def return_bike(bike, bike_condition)
     if full?
       raise "Docking station is full!"
     else

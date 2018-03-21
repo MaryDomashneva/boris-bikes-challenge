@@ -13,6 +13,13 @@ describe DockingStation do
         released_bike = DockingStation.new(1).release_bike
         expect(released_bike).to be_a_kind_of(Bike)
       end
+
+      it 'removes the bike from bike storage' do
+        docking_station = DockingStation.new(1)
+        expect(docking_station.bikes_storage.count).to eq(1)
+        docking_station.release_bike
+        expect(docking_station.bikes_storage.count).to eq(0)
+      end
     end
 
     context 'when has no bikes' do
@@ -24,7 +31,7 @@ describe DockingStation do
 
   it "is possible to return bike to the docking station.
     Docking ststion takes 1 argument" do
-      expect(subject).to respond_to(:return_bike).with(1).argument
+      expect(subject).to respond_to(:return_bike).with(2).argument
   end
 
   context 'when return bike' do
@@ -32,7 +39,7 @@ describe DockingStation do
 
     context 'when station is full' do
       it 'raises error' do
-        expect { subject.return_bike(bike) }.to raise_error("Docking station is full!")
+        expect { subject.return_bike(bike, true) }.to raise_error("Docking station is full!")
       end
     end
 
@@ -40,10 +47,14 @@ describe DockingStation do
       let(:docking_station) { return DockingStation.new(1, []) }
 
       it 'stores the bike' do
-        docking_station.return_bike(bike)
+        docking_station.return_bike(bike, true)
         expect(docking_station.bikes_storage.count).to eq(1)
         expect(docking_station.bikes_storage[0]).to eq(bike)
       end
+
+      # context 'when bike is broken' do
+      #
+      # end
     end
   end
 
