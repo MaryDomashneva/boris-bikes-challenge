@@ -3,27 +3,28 @@ class DockingStation
 
   attr_reader :bikes_storage
 
-  def initialize(capacity = INITIAL_BIKES, initial_bikes_storage = nil)
-    if initial_bikes_storage.nil?
-      @bikes_storage = []
+  def initialize(initia_number = nil, capacity = INITIAL_BIKES)
+    @bikes_storage = []
+    @capacity = capacity
+    if initia_number.nil?
       capacity.times { @bikes_storage << Bike.new }
     else
-      @bikes_storage = initial_bikes_storage
+      initia_number.times { @bikes_storage << Bike.new }
     end
-    @capacity = capacity
+
   end
 
   def release_bike
-    if empty?
-      raise "No bikes!"
-    else
-      @bikes_storage.pop
-    end
-  end
+     if empty? || !@bikes_storage.any? {|bike| bike.working?}
+       raise 'No bikes!'
+     else
+       @bikes_storage.delete_at(@bikes_storage.index {|bike| bike.working? })
+     end
+   end
 
-  def return_bike(bike, bike_condition)
+  def return_bike(bike)
     if full?
-      raise "Docking station is full!"
+      raise 'Docking station is full!'
     else
       @bikes_storage << bike
     end
@@ -34,11 +35,7 @@ class DockingStation
   attr_reader :capacity
 
   def full?
-    if @bikes_storage.count == @capacity
-      return true
-    else
-      return false
-    end
+    @bikes_storage.count >= @capacity
   end
 
   def empty?
@@ -48,8 +45,12 @@ class DockingStation
 end
 
 class Bike
-  def initialize
-    @condition = true
+  def initialize(condition = true)
+    @condition = condition
+  end
+
+  def ==(other)
+    other.instance_of?(self.class) && working? ==  other.working?
   end
 
   def mark_condition(bike_condition)
@@ -60,5 +61,3 @@ class Bike
     return @condition
   end
 end
-
-DockingStation.new
