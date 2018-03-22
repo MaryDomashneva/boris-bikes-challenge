@@ -9,9 +9,13 @@ describe DockingStation do
 
   context 'when release bike' do
     context 'when has free bike' do
-      it 'actually releases a bike' do
-        released_bike = DockingStation.new(1).release_bike
-        expect(released_bike).to be_a_kind_of(Bike)
+      it 'actually releases a working bike' do
+        working_bike = Bike.new
+        working_bike.mark_condition(true)
+        broken_bike = Bike.new
+        broken_bike.mark_condition(false)
+        released_bike = DockingStation.new(2, [working_bike, broken_bike]).release_bike
+        expect(released_bike).to eq(working_bike)
       end
 
       it 'removes the bike from bike storage' do
@@ -29,8 +33,8 @@ describe DockingStation do
     end
   end
 
-  it "is possible to return bike to the docking station.
-    Docking ststion takes 1 argument" do
+  it 'is possible to return bike to the docking station.
+    Docking ststion takes 1 argument' do
       expect(subject).to respond_to(:return_bike).with(2).argument
   end
 
@@ -51,14 +55,10 @@ describe DockingStation do
         expect(docking_station.bikes_storage.count).to eq(1)
         expect(docking_station.bikes_storage[0]).to eq(bike)
       end
-
-      # context 'when bike is broken' do
-      #
-      # end
     end
   end
 
-  it "allows to access docked bikes" do
+  it 'allows to access docked bikes' do
     expect(subject).to respond_to(:bikes_storage)
   end
 end

@@ -48,8 +48,16 @@ class DockingStation
 end
 
 class Bike
+  def initialize
+    @condition = true
+  end
+
+  def mark_condition(bike_condition)
+    @condition = bike_condition
+  end
+
   def working?
-    return true
+    return @condition
   end
 end
 
